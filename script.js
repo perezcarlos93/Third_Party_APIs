@@ -36,6 +36,7 @@ $(document).ready(function(){
 var inputColumn;
 var saveColumn;
 var plannerContainer = $(".container");
+var userEvents= JSON.parse(localStorage.getItem('userEvents')) || {};
 
 
 generatePlanner();
@@ -73,10 +74,11 @@ timeColumn.text(standardTime + code);
 row.append(timeColumn);
 
 //Creating an Input Column for users to input the event for the current hour
-inputColumn = $('<input>');
+inputColumn = $(`<input>`);
+inputColumn.text(userEvents || "")
 inputColumn.attr('type', 'text');
 inputColumn.attr('data-ID', rowID);
-inputColumn.addClass('eventText col-10')
+inputColumn.addClass('eventText col-10');
 
     // This if statement determines what time it is and changes the CSS classes to update
     // each input Column. The current hour will always be red, while future hours will be green
@@ -112,7 +114,7 @@ console.log(row);
 
 $(row).on('click', 'button', function(e){
     e.preventDefault();
-    var event = $(this).val()
+    var event = $(this).siblings("input").val()
     console.log(event)
     });
     
@@ -120,10 +122,17 @@ $(row).on('click', 'button', function(e){
 };
 
 
+plannerContainer.on('click', 'button', function(){
+    var key = $(this).siblings('.hour').text();
+    var value = $(this).siblings("input").val()
+    userEvents[key] = value;
+    console.log("saved: " + userEvents);
+    localStorage.setItem('userEvents', JSON.stringify(userEvents));
+})
+
+
 
 inputColumn = $(".eventText").val()
-
-
 // Do not code past this line
     }
 );
